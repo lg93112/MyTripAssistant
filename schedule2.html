@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Welcome to Your Personal Traval Assistant</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script src="https://sdk.amazonaws.com/js/aws-sdk-2.41.0.min.js"></script>
+  <script type="text/javascript" src="lib/axios/dist/axios.standalone.js"></script>
+  <script type="text/javascript" src="lib/CryptoJS/rollups/hmac-sha256.js"></script>
+  <script type="text/javascript" src="lib/CryptoJS/rollups/sha256.js"></script>
+  <script type="text/javascript" src="lib/CryptoJS/components/hmac.js"></script>
+  <script type="text/javascript" src="lib/CryptoJS/components/enc-base64.js"></script>
+  <script type="text/javascript" src="lib/url-template/url-template.js"></script>
+  <script type="text/javascript" src="lib/apiGatewayCore/sigV4Client.js"></script>
+  <script type="text/javascript" src="lib/apiGatewayCore/apiGatewayClient.js"></script>
+  <script type="text/javascript" src="lib/apiGatewayCore/simpleHttpClient.js"></script>
+  <script type="text/javascript" src="lib/apiGatewayCore/utils.js"></script>
+  <script type="text/javascript" src="apigClient.js"></script>
+</head>
+
+
+<style>
+  body {
+      font: 400 15px/1.8 Lato, sans-serif;
+      color: #777;
+  }
+  h3, h4 {
+      margin: 10px 0 30px 0;
+      letter-spacing: 10px;      
+      font-size: 20px;
+      color: #111;
+  }
+  .center-block {
+    margin: auto;
+    display: block;
+  }
+  .box {
+    background-color: lightblue;
+    width: 300px;
+    border: 5px solid lightgoldenrodyellow;
+    padding: 5px;
+    margin: 5px;
+    color: teal;
+    font-weight: bold;
+  }
+  .container {
+      padding: 80px 120px;
+  }
+  .person {
+      border: 10px solid transparent;
+      margin-bottom: 25px;
+      width: 80%;
+      height: 80%;
+      opacity: 0.7;
+  }
+  .person:hover {
+      border-color: #f1f1f1;
+  }
+  .carousel-inner img {
+      width: 100%; /* Set width to 100% */
+      margin: auto;
+  }
+  .carousel-caption h3 {
+      color: #fff !important;
+  }
+  @media (max-width: 600px) {
+    .carousel-caption {
+      display: none; /* Hide the carousel text when the screen is less than 600 pixels wide */
+    }
+  }
+  .bg-1 {
+      background: #2d2d30;
+      color: #bdbdbd;
+  }
+  .bg-1 h3 {color: #fff;}
+  .bg-1 p {font-style: italic;}
+  .list-group-item:first-child {
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+  }
+  .list-group-item:last-child {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+  }
+  .thumbnail {
+      padding: 0 0 15px 0;
+      border: none;
+      border-radius: 0;
+  }
+  .thumbnail p {
+      margin-top: 15px;
+      color: #555;
+  }
+  .btn {
+      padding: 10px 20px;
+      background-color: #333;
+      color: #f1f1f1;
+      border-radius: 0;
+      transition: .2s;
+  }
+  .btn:hover, .btn:focus {
+      border: 1px solid #333;
+      background-color: #fff;
+      color: #000;
+  }
+  .modal-header, h4, .close {
+      background-color: #333;
+      color: #fff !important;
+      text-align: center;
+      font-size: 30px;
+  }
+  .modal-header, .modal-body {
+      padding: 40px 50px;
+  }
+  .nav-tabs li a {
+      color: #777;
+  }
+  #googleMap {
+      width: 100%;
+      height: 400px;
+      -webkit-filter: grayscale(100%);
+      filter: grayscale(100%);
+  }  
+  .navbar {
+      font-family: Montserrat, sans-serif;
+      margin-bottom: 0;
+      background-color: #2d2d30;
+      border: 0;
+      font-size: 11px !important;
+      letter-spacing: 4px;
+      opacity: 0.9;
+  }
+  .navbar li a, .navbar .navbar-brand { 
+      color: #d5d5d5 !important;
+  }
+  .navbar-nav li a:hover {
+      color: #fff !important;
+  }
+  .navbar-nav li.active a {
+      color: #fff !important;
+      background-color: #29292c !important;
+  }
+  .navbar-default .navbar-toggle {
+      border-color: transparent;
+  }
+  .open .dropdown-toggle {
+      color: #fff;
+      background-color: #555 !important;
+  }
+  .dropdown-menu li a {
+      color: #000 !important;
+  }
+  .dropdown-menu li a:hover {
+      background-color: red !important;
+  }
+  footer {
+      background-color: #2d2d30;
+      color: #f5f5f5;
+      padding: 32px;
+  }
+  footer a {
+      color: #f5f5f5;
+  }
+  footer a:hover {
+      color: #777;
+      text-decoration: none;
+  }  
+  .form-control {
+      border-radius: 0;
+  }
+  textarea {
+      resize: none;
+  }
+
+
+
+  /* The actual timeline (the vertical ruler) */
+.timeline {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: Helvetica, sans-serif;
+}
+
+/* The actual timeline (the vertical ruler) */
+.timeline::after {
+  content: '';
+  position: absolute;
+  width: 6px;
+  background-color: white;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  margin-left: -3px;
+}
+
+/* Container around content */
+.containernew {
+  padding: 10px 40px;
+  position: relative;
+  background-color: inherit;
+  width: 50%;
+}
+
+/* The circles on the timeline */
+.containernew::after {
+  content: '';
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  right: -17px;
+  background-color: white;
+  border: 4px solid #FF9F55;
+  top: 15px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Place the container to the left */
+.left {
+  left: 0;
+}
+
+/* Place the container to the right */
+.right {
+  left: 50%;
+}
+
+/* Add arrows to the left container (pointing right) */
+.left::before {
+  content: " ";
+  height: 0;
+  position: absolute;
+  top: 22px;
+  width: 0;
+  z-index: 1;
+  right: 30px;
+  border: medium solid white;
+  border-width: 10px 0 10px 10px;
+  border-color: transparent transparent transparent white;
+}
+
+/* Add arrows to the right container (pointing left) */
+.right::before {
+  content: " ";
+  height: 0;
+  position: absolute;
+  top: 22px;
+  width: 0;
+  z-index: 1;
+  left: 30px;
+  border: medium solid white;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent white transparent transparent;
+}
+
+/* Fix the circle for containers on the right side */
+.right::after {
+  left: -16px;
+}
+
+/* The actual content */
+.content {
+  padding: 20px 30px;
+  background-color: white;
+  position: relative;
+  border-radius: 6px;
+}
+
+/* Media queries - Responsive timeline on screens less than 600px wide */
+@media screen and (max-width: 600px) {
+  /* Place the timelime to the left */
+  .timeline::after {
+  left: 31px;
+  }
+  
+  /* Full-width containers */
+  .containernew {
+  width: 100%;
+  padding-left: 70px;
+  padding-right: 25px;
+  }
+  
+  /* Make sure that all arrows are pointing leftwards */
+  .containernew::before {
+  left: 60px;
+  border: medium solid white;
+  border-width: 10px 10px 10px 0;
+  border-color: transparent white transparent transparent;
+  }
+
+  /* Make sure all circles are at the same spot */
+  .left::after, .right::after {
+  left: 15px;
+  }
+  
+  /* Make all right containers behave like the left ones */
+  .right {
+  left: 0%;
+  }
+}
+</style>
+
+
+<body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="50">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Trip Assistant</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#intro">Intro</a></li>
+        <li><a href="recommendation.html">Trip Assistant</a></li>
+        <li><a href="photo.html">Photo Upload</a></li>
+        <li><a href="schedule.html">Trip Schedule</a></li>
+        <li><a href="index.html#message">Message</a></li>
+        <li><a href="#"><span class="glyphicon glyphicon-search"></span></a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<div id="schedulepage" class="bg-1">
+    <div style="height: 100vh" class="container" id="schedule">
+    </div>
+</div> 
+
+
+<script type="text/javascript">
+    let params = (new URL(document.location)).searchParams;
+    let name = params.get("name");
+    console.log("name is" + name);
+    var apigClient = apigClientFactory.newClient({
+              accessKey: '',
+              secretKey: '',
+              apiKey: '',
+              region: ''
+    });
+    
+    showall(name);
+
+    function showall(user){
+        document.getElementById("schedule").style.height = "100%";
+        var params = {"name": user};
+        console.log(params);
+        var body = {};
+        var additionalParams = {queryParams:{"name": user}};
+        apigClient.recbyidGet(params, body, additionalParams)
+        .then(function(response){
+            console.log("success");
+            console.log(response);
+            var trips = response.data.Item.Records;
+            console.log(trips);
+            var prompt = document.createElement("h3");
+            //prompt.style.fontFamily = "verdana";
+            prompt.className = "text-center";
+            prompt.innerHTML = "Trip Schedules for " + user;
+            document.getElementById("schedule").appendChild(prompt);
+            var line = document.createElement("br");
+            document.getElementById("schedule").appendChild(line);
+            var ele1;
+            for(let i = 0; i < trips.length; i++){
+                if(i % 3 == 0){
+                    ele1 = document.createElement('div');
+                    ele1.className = "row text-center";
+                    document.getElementById('schedule').appendChild(ele1);
+                }
+                var ele2 = document.createElement('div');
+                ele2.className = "col-sm-4";
+                ele1.appendChild(ele2);
+                var box = document.createElement("div");
+                box.className = "box";
+                box.style.margin = "auto";
+                box.style.cursor = "pointer";
+                box.onmouseover = function() {
+                    this.style.backgroundColor = 'lightyellow';
+                };
+                box.onmouseout = function() {
+                    this.style.backgroundColor = '';
+                };
+                box.onclick = function(){
+                    console.log(trips[i]["time"]);
+                    showschedule(user, trips[i]["time"], trips[i]["location"]);
+                };
+                ele2.appendChild(box);
+                var text1 = document.createElement("p");
+                text1.innerHTML = "Search/Schedule Time";
+                box.appendChild(text1);
+                var time = document.createElement("p");
+                var d = new Date(trips[i]["time"]);
+                time.innerHTML = d.toLocaleDateString();
+                time.style.color = "navy";
+                box.appendChild(time);
+                var text2 = document.createElement("p");
+                text2.innerHTML = "Location";
+                box.appendChild(text2); 
+                var location = document.createElement("p");
+                location.innerHTML = trips[i]["location"];
+                location.style.color = "navy";
+                box.appendChild(location);
+                var lines = document.createElement("br");
+                document.getElementById("schedule").appendChild(lines);
+            }
+        }).catch(function(response){
+            console.log("failure");
+        });
+    }
+
+    function showschedule(user, time, location){
+        console.log("Schedule user is:" + user);
+        console.log("Timestamp is:" + time);
+        console.log("Location is:" + location);
+        var params = {"name": user, "timestamp": time};
+        console.log(params);
+        var body = {};
+        var additionalParams = {queryParams:{"name": user, "timestamp": time}};
+        apigClient.recbyidtimeGet(params, body, additionalParams)
+        .then(function(response){
+            console.log("success");
+            console.log(response);
+            var plans = response.data.Item.travel_records;
+            console.log(plans);
+            document.getElementById("schedule").innerHTML = "";
+            document.getElementById("schedule").style.height = "100%";
+            showImage(plans, user, location);
+            var attracts = new Array();
+            for(let i = 1; i < plans.length; i++){
+                attracts.push(plans[i]["name"]);
+            }
+            console.log(attracts);
+            var lines = document.createElement("br");
+            document.getElementById("schedule").appendChild(lines);
+            var timeline = document.createElement("div");
+            timeline.className = "timeline";
+            document.getElementById("schedule").appendChild(timeline);
+            var dir = "right";
+            var dates = plans[0]["startdate"].split("-");
+            console.log(dates);
+            var date = new Date(dates[0], dates[1]-1, dates[2]);
+            console.log(date);
+            for(let j = 0; j < attracts.length; j++){
+                var ele1 = document.createElement("div");
+                if(dir == "right"){ele1.className = "containernew " + "left"; dir = "left";}
+                else{ele1.className = "containernew " + "right"; dir = "right";}
+                timeline.appendChild(ele1);
+                var ele2 = document.createElement("div");
+                ele2.className = "content";
+                ele1.appendChild(ele2);
+                var head = document.createElement("h2");
+                head.style.fontSize = "140%";
+                var text;
+                if(dir == "left"){
+                    text = "Moring, " + date.toLocaleDateString();
+                }
+                else{
+                    text = "Afternoon, " + date.toLocaleDateString();
+                    date.setDate(date.getDate() + 1);
+                }
+                console.log(text);
+                head.innerHTML = text;
+                head.style.color = "black";
+                ele2.appendChild(head);
+                var para = document.createElement("p");
+                para.innerHTML = attracts[j];
+                para.style.color = "black";
+                para.style.fontSize = "120%";
+                ele2.appendChild(para);
+            }
+        }).catch(function(response){
+            console.log("failure");
+        });
+    }
+
+
+    function showImage(info, user, location){
+        var ele1;
+        var prompt1 = document.createElement("h3");
+        prompt1.className = "text-center";
+        prompt1.innerHTML = "Trip Schedules for " + user;
+        document.getElementById("schedule").appendChild(prompt1);
+        var prompt4 = document.createElement("h3");
+        prompt4.className = "text-center";
+        prompt4.innerHTML = location;
+        document.getElementById("schedule").appendChild(prompt4);
+        var prompt2 = document.createElement("h3");
+        prompt2.className = "text-center";
+        prompt2.innerHTML = "Start at " + info[0]["startdate"];
+        document.getElementById("schedule").appendChild(prompt2);
+        var prompt3 = document.createElement("h3");
+        prompt3.className = "text-center";
+        prompt3.innerHTML = "Travel with " + info[0]["people"] + " people";
+        document.getElementById("schedule").appendChild(prompt3);
+        var line = document.createElement("br");
+        document.getElementById("schedule").appendChild(line);
+        for(let j = 1; j < info.length; j++){
+            if(j % 3 == 1){
+                ele1 = document.createElement('div');
+                ele1.className = "row text-center";
+                document.getElementById('schedule').appendChild(ele1);
+            }
+            var attract = info[j]["name"];
+            var image_url = info[j]["image_url"];
+            var url = info[j]["url"];
+            var title = info[j]["title"];
+            var rating = info[j]["rating"];
+            var location =  info[j]["location"]; 
+            console.log(location + "and done");
+            var ele2 = document.createElement('div');
+            ele2.className = "col-sm-4";
+            ele1.appendChild(ele2);
+            var ele3 = document.createElement('div');
+            ele3.className = "thumbnail";
+            ele2.appendChild(ele3);
+            var image = document.createElement('img');
+            image.src = image_url;
+            image.style.width = "400px"; 
+            image.style.height = "200px";
+            ele3.appendChild(image); 
+            var p1 = document.createElement('p');
+            p1.innerHTML = "Name: " + attract;
+            ele3.appendChild(p1);
+            var p2 = document.createElement('p');
+            p2.innerHTML = "Type: " + title;
+            ele3.appendChild(p2);
+            var p3 = document.createElement('p');
+            p3.innerHTML = "Rating: " + rating;
+            ele3.appendChild(p3);
+            var p4 = document.createElement('p');
+            p4.innerHTML = "Location: " + location;
+            ele3.appendChild(p4);
+            var a = document.createElement('a');
+            var linkText = document.createTextNode("URL");
+            a.appendChild(linkText);
+            a.title = "URL";
+            a.href = url;
+            ele3.appendChild(a);
+        }
+    }
+
+</script>
+
+</body>
+
+
+</html>
