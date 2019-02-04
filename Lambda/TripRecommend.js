@@ -1,5 +1,6 @@
 'use strict';
-     
+var request = require('request');
+
 // Close dialog with the customer, reporting fulfillmentState of Failed or Fulfilled ("Thanks, your pizza will arrive in 20 minutes")
 function close(sessionAttributes, fulfillmentState, message) {
     return {
@@ -26,35 +27,62 @@ function dispatch_search(intentRequest, callback) {
     const slots = intentRequest.currentIntent.slots;
     const name = slots.Name;
     const locations = slots.Location;
-    const date = slots.StartDate;
-    const time = slots.Time;
+    const startdate = slots.StartDate;
+    const days = slots.Days;
     const people = slots.People;
+    const categories = slots.Category;
     
-    const request = require("request");
-    const tokenId = "CMRyLRonKGva6JT4Bw2XpP6o06puY00H0c0Hs1_YKXxaTG-bZvGu1AcXGREfGOLDEtgdyjUOV8XNBlMRmVljGEpUl5VwinEySC0u12r-x8q8g78yCUjpQMVF4hPnW3Yx"; 
-    var options = { method: 'GET',
+    const tokenId = ""; 
+    var opts;
+    if(categories == "NO" || categories == "no"){
+        opts = { 'location': locations,
+            'term': 'attraction',
+            'limit': 3*days,
+            'sort_by': 'rating'
+        }
+    }
+    else{
+        opts = { 'location': locations,
+            'term': 'attraction',
+            'limit': 3*days,
+            'sort_by': 'rating',
+            'categories': categories
+        }
+    }
+    var options = { 
+      method: 'GET',
       url: 'https://api.yelp.com/v3/businesses/search',
-      qs: { location: locations,
-            term: 'attraction',
-            limit: time,
-            sort_by: 'rating'
-      },
+      qs: opts,
       headers: 
-        { 'cache-control': 'no-cache',
+        { 
         'authorization':  'Bearer ' + tokenId
         }
     };
-  
+    console.log(JSON.stringify(options));
     request(options, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            console.log(body);
-            var suggestions = JSON.parse(body).businesses;
-            var newresponse = close(sessionAttributes, 'Fulfilled',{'contentType': 'PlainText', 'content': JSON.stringify(suggestions)});
-            callback(null, newresponse);
+        if (error) {
+            console.log('fail');
+            callback(error, null);
+        };
+        console.log(body);
+        var suggestions = JSON.parse(body).businesses;
+        var response = new Array();
+        response.push({"name": name, "startDate":startdate, "days":days, "people":people, "location": locations});
+        var i;
+        for(i = 0; i < suggestions.length; i++){
+            var attract = suggestions[i].name;
+            var image_url = suggestions[i].image_url;
+            var url = suggestions[i].url;
+            var title = suggestions[i]["categories"][0]["title"];
+            var rating = suggestions[i].rating;
+            var location =  suggestions[i]["location"].address1;
+            var place = {"name":attract, "image_url":image_url, "url":url, "title":title, "rating": rating, "location": location
+            }
+            response.push(place);
         }
-        else{
-            callback(error,null);
-        }
+        console.log(response);
+        var newresponse = close(sessionAttributes, 'Fulfilled',{'contentType': 'PlainText', 'content': JSON.stringify(response)});
+        callback(null, newresponse);
     });
     
 }
