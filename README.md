@@ -10,7 +10,7 @@ The web application url is:
 
 https://gary448.auth.us-east-2.amazoncognito.com/login?response_type=code&client_id=4ph66i11f26md66oipd7ge7nhm&redirect_uri=https://s3.amazonaws.com/tripproject/files/index.html
 
-And the login page is as follows which uses AWS Cognito to authenticate users:
+And the login page is shown below which uses AWS Cognito to authenticate users:
 <p align="center">
   <img height="250" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/login.png">
 </p>
@@ -26,7 +26,7 @@ index.html: home page of our application. It contains the introduction about our
 </p>
 
 
-recommend.html: chatbot interface to recommend trip for user, show attractions and let user add their desired attractions for their trips.
+recommendation.html: chatbot interface to recommend trip for user, show attractions and let user add their desired attractions for their trips.
 <p align="center">
   <img width="250" height="250" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/recommend1.png">
   <img width="250" height="250" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/recommend2.png">
