@@ -12,14 +12,45 @@ https://gary448.auth.us-east-2.amazoncognito.com/login?response_type=code&client
 
 And the login page is as follows which uses AWS Cognito to authenticate users:
 <p align="center">
-  <img height="300" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/login.png">
+  <img height="250" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/login.png">
 </p>
 
 This repository contains all the files related to this application. The front end code consists of multiple html files building the front end using HTML, CSS, Javascript and Bootstrap hosted in S3 bucket. The back end code is stored in lambda functions folder which are lambda functions implementing AWS services and/or integrated with API methods in API Gateway.
 
+
 index.html: home page of our application. It contains the introduction about our website and a function to send user schedule to specified phone number as trip notifications.
-<p align="left">
-  <img height="300" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/home.png">
-  <img height="300" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/userschedule.png">
-  <img height="300" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/phonemes.png">
+<p align="center">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/home.png">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/userschedule.png">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/phonemes.png">
+</p>
+
+
+recommend.html: chatbot interface to recommend trip for user, show attractions and let user add their desired attractions for their trips.
+<p align="center">
+  <img width="250" height="250" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/recommend1.png">
+  <img width="250" height="250" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/recommend2.png">
+</p>
+<p align="center">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/recommend3.png">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/recommend4.png">
+</p>
+
+
+shedule.html and schedule2.html: interface to show all schedules of user and each schedule detail.
+<p align="center">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/schedule1.png">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/schedule2.png">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/shedule3.png">
+</p>
+
+
+photo.html: interface to add trip photos to "album" named after city name, search photos in the album and search photo intelligently with photo tags.
+<p align="center">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/photo1.png">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/photo2.png">
+</p>
+<p align="center">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/photo3.png">
+  <img width="250" height="150" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/photo4.png">
 </p>
