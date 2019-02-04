@@ -10,4 +10,5 @@ In addition, users can also upload their trip photos here and search photos inte
 https://gary448.auth.us-east-2.amazoncognito.com/login?response_type=code&client_id=4ph66i11f26md66oipd7ge7nhm&redirect_uri=https://s3.amazonaws.com/tripproject/files/index.html
 
 And the login page is as follows which uses AWS Cognito to authenticate users:
-![alt text](/demo photo/login.php)
+
+![alt text](demo photo/login.php)
