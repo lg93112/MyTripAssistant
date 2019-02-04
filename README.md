@@ -11,4 +11,4 @@ https://gary448.auth.us-east-2.amazoncognito.com/login?response_type=code&client
 
 And the login page is as follows which uses AWS Cognito to authenticate users:
 
-![alt text](demo photo/login.php)
+![alt text](MyTripAssistant/demo photo/login.png)
