@@ -11,4 +11,4 @@ https://gary448.auth.us-east-2.amazoncognito.com/login?response_type=code&client
 
 And the login page is as follows which uses AWS Cognito to authenticate users:
 
-![alt tag](MyTripAssistant/demo photo/login.png)
+<img align="center" height="300" src="https://github.com/lg93112/MyTripAssistant/blob/master/demo%20photo/login.png">
